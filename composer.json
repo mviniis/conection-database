@@ -1,0 +1,21 @@
+{
+	"name": "mviniis/connection-database",
+	"description": "Gerenciador de conexões com banco de dados e gerador de queries",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Matheus Vinicius",
+			"email": "matheusv.16santos@gmail.com"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"Mviniis\\QueryBuilder\\": "src/"
+		}
+	},
+	"require": {
+		"php": "^8.0.2",
+		"illuminate/http": "v9.52.x",
+		"symfony/dotenv": "v6.0.0"
+	}
+}
