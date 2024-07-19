@@ -2,6 +2,7 @@
 	"name": "mviniis/connection-database",
 	"description": "Gerenciador de conexões com banco de dados e gerador de queries",
 	"license": "MIT",
+	"version": "v1.0.0",
 	"authors": [
 		{
 			"name": "Matheus Vinicius",
@@ -10,7 +11,7 @@
 	],
 	"autoload": {
 		"psr-4": {
-			"Mviniis\\QueryBuilder\\": "src/"
+			"Mviniis\\ConnectionDatabase\\": "src/"
 		}
 	},
 	"require": {
