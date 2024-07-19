@@ -97,6 +97,7 @@ abstract class DBExecute {
    * @param  SQLFields[]                  $fields           Campos que serão populados
    * @param  SQLValues                    $values           Valores que serão inseridos
    * @param  SQLWhereGroup|SQLWhere       $conditions       Condições da inserção
+   * @param  bool                         $ignore           Adiciona cláusula IGNORE
    * @return self
    */
   public function insert(
@@ -120,22 +121,23 @@ abstract class DBExecute {
 
   /**
    * Método responsável por inserir um ou vários reguistros no banco de dados, com base em uma consulta
-   * @param  SQLWhereGroup|SQLWhere       $conditions       Condições da consulta
-   * @param  SQLJoin|null                 $joins            Junções com outras tabelas
-   * @param  SQLFields|null               $fields           Campos retornados
-   * @param  SQLOrder|null                $order            Ordenação dos dados retornados
-   * @param  int|null                     $limit            Limite de dados retornados
-   * @param  int|null                     $offset           Paginação dos dados
+   * @param  SQLSelect          $obSqlSelect       Select que será aplicado a query de inserção
+   * @param  SQLFields[]        $fields            Campos que serão populados
+   * @param  bool               $ignore            Adiciona cláusula IGNORE
    * @return self
    */
   public function insertSelect(
-    mixed $conditions = null,
-    ? SQLJoin $joins = null,
-    ? SQLFields $fields = null,
-    ? SQLOrder $order = null,
-    ? int $limit = null,
-    ? int $offset = null
+    SQLSelect $obSqlSelect,
+    array $fields,
+    bool $ignore = false
   ): self {
+    $obSql = new SQLInsert;
+    $obSql->addInto(new SQLInto($this->table, $this->table, $ignore));
+    $obSql->addSelect($obSqlSelect)->addFields($fields);
+    
+    // SUBTITUI A QUERY
+    $this->sql = $obSql;
+
     return $this;
   }
 

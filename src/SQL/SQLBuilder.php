@@ -109,7 +109,7 @@ abstract class SQLBuilder {
         break;
 
         case ($parte == 'select'):
-          if((is_null($response['values']) && is_null($response['fieldsValues'])) && $valorParte instanceof SQLSelect) {
+          if($valorParte instanceof SQLSelect) {
             $response[$parte] = $valorParte->getQuery();
             $this->addPreparedParams($valorParte->getPreparedParams());
           }
