@@ -5,6 +5,7 @@ namespace Mviniis\ConnectionDatabase\DB;
 use \PDO;
 use \PDOException;
 use \Illuminate\Http\JsonResponse;
+use Mviniis\ConnectionDatabase\App\DotEnv;
 use \Mviniis\ConnectionDatabase\Exceptions\DBConnectionInvalid;
 
 /**
@@ -77,9 +78,11 @@ abstract class DBConnection {
    * @return void
    */
   private static function carregarCredenciais(): void {
-    $configuracoesObrigatorias = ['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD', 'DB_CHARSET'];
-
+    // CARREGA OS DADOS DE CONFIGURAÇÃO DO BANCO
+    DotEnv::init();
+    
     // VERIFICA SE AS CONFIGURAÇÕES DE BANCO FORAM CARREGADAS
+    $configuracoesObrigatorias = ['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD', 'DB_CHARSET'];
     foreach($configuracoesObrigatorias as $hashEnv) {
       if(!in_array($hashEnv, array_keys($_ENV ?? []))) throw new DBConnectionInvalid('Configurações de acesso ao banco inválidas!');
     }
