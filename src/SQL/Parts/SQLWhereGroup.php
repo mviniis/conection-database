@@ -12,8 +12,8 @@ namespace Mviniis\ConnectionDatabase\SQL\Parts;
 class SQLWhereGroup extends SQLParts {
   /**
    * Construtor da classe
-   * @param string                                             $operador        Operador condicional do agrupamento
-   * @param SQLWhereGroup[]|SQLWhereGroupItem[]|SQLWhere       $condicoes       Dados das condições do agrupamento
+   * @param string                         $operador        Operador condicional do agrupamento
+   * @param SQLWhereGroup[]|SQLWhere       $condicoes       Dados das condições do agrupamento
    */
   public function __construct(
     private string $operador,
@@ -29,8 +29,7 @@ class SQLWhereGroup extends SQLParts {
     foreach($this->condicoes as $obCondicaoItem) {
       $sqlGrupoValido     = $obCondicaoItem instanceof SQLWhereGroup;
       $sqlCondicaoValido  = $obCondicaoItem instanceof SQLWhere;
-      $sqlItemGrupoValido = $obCondicaoItem instanceof SQLWhereGroupItem;
-      if(!$sqlCondicaoValido && !$sqlGrupoValido && !$sqlItemGrupoValido) continue;
+      if(!$sqlCondicaoValido && !$sqlGrupoValido) continue;
 
       $condicoesValidas[] = $obCondicaoItem->getClausule();
     }
@@ -45,8 +44,7 @@ class SQLWhereGroup extends SQLParts {
     foreach($this->condicoes as $obCondicaoItem) {
       $sqlGrupoValido     = $obCondicaoItem instanceof SQLWhereGroup;
       $sqlCondicaoValido  = $obCondicaoItem instanceof SQLWhere;
-      $sqlItemGrupoValido = $obCondicaoItem instanceof SQLWhereGroupItem;
-      if(!$sqlCondicaoValido && !$sqlGrupoValido && !$sqlItemGrupoValido) continue;
+      if(!$sqlCondicaoValido && !$sqlGrupoValido) continue;
 
       // ADICIONA OS VALORES
       foreach($obCondicaoItem->getPreparedParams() as $preparedParamsWhere) {

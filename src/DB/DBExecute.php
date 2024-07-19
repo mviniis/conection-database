@@ -44,16 +44,16 @@ abstract class DBExecute {
 
   /**
    * Método responsável por realizar a busca de um ou vários registros no banco de dados
-   * @param  SQLWhereGroup|null       $conditions       Condições da consulta
-   * @param  SQLJoin[]                $joins            Junções com outras tabelas
-   * @param  SQLFields[]              $fields           Campos retornados
-   * @param  SQLOrder|null            $order            Ordenação dos dados retornados
-   * @param  int|null                 $limit            Limite de dados retornados
-   * @param  int|null                 $offset           Paginação dos dados
+   * @param  SQLWhereGroup|SQLWhere       $conditions       Condições da consulta
+   * @param  SQLJoin[]                    $joins            Junções com outras tabelas
+   * @param  SQLFields[]                  $fields           Campos retornados
+   * @param  SQLOrder                     $order            Ordenação dos dados retornados
+   * @param  int                          $limit            Limite de dados retornados
+   * @param  int                          $offset           Paginação dos dados
    * @return self
    */
   public function select(
-    ? SQLWhereGroup $conditions = null,
+    mixed $conditions = null,
     ? array $joins = [],
     ? array $fields = [],
     ? SQLOrder $order = null,

@@ -33,8 +33,8 @@ class SQLDelete extends SQLBuilder {
     return $this;
   }
 
-  public function addWhere(SQLWhereGroup $obWhereGroup): self {
-    $this->queryParts['where'] = $obWhereGroup;
+  public function addWhere(mixed $obWhere): self {
+    $this->queryParts['where'] = $obWhere;
     
     return $this;
   }

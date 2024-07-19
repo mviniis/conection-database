@@ -2,7 +2,7 @@
 
 namespace Mviniis\ConnectionDatabase\SQL;
 
-use \Mviniis\ConnectionDatabase\SQL\Parts\{SQLFields, SQLFrom, SQLJoin, SQLOrder, SQLWhereGroup};
+use \Mviniis\ConnectionDatabase\SQL\Parts\{SQLFields, SQLFrom, SQLJoin, SQLOrder, SQLWhere, SQLWhereGroup};
 
 /**
  * class SQLSelect
@@ -45,8 +45,10 @@ class SQLSelect extends SQLBuilder {
     return $this;
   }
 
-  public function addWhere(SQLWhereGroup $obWhereGroup): self {
-    $this->queryParts['where'] = $obWhereGroup;
+  public function addWhere(mixed $obWhere): self {
+    if($obWhere instanceof SQLWhereGroup || $obWhere instanceof SQLWhere) {
+      $this->queryParts['where'] = $obWhere;
+    }
     
     return $this;
   }

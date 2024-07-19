@@ -137,10 +137,10 @@ abstract class SQLBuilder {
 
   /**
    * Método responsável por definir as condições de uma operação de forma agrupada
-   * @param  SQLWhereGroup      $obWhereGroup      Agrupamento de condições que serão aplicadas na operação
+   * @param  SQLWhereGroup|SQWhere      $obWhere      Agrupamento de condições que serão aplicadas na operação
    * @return self
    */
-  public function addWhere(SQLWhereGroup $obWhereGroup): self {
+  public function addWhere(mixed $obWhere): self {
     return $this;
   }
 
