@@ -22,7 +22,7 @@ class SQLDelete extends SQLBuilder {
     $deleteQuery = [
       'DELETE',
       "FROM {$partesQuery['from']}",
-      "WHERE {$partesQuery['where']}"
+      isset($partesQuery['where']) && !is_null($partesQuery['where']) ? "WHERE {$partesQuery['where']}": ""
     ];
 
     return implode(' ', array_filter($deleteQuery)) . ';';

@@ -4,7 +4,7 @@ namespace Mviniis\ConnectionDatabase\DB;
 
 use \stdClass;
 use \PDOException;
-use \Mviniis\ConnectionDatabase\SQL\{SQLSelect, SQLBuilder, SQLInsert, SQLUpdate};
+use \Mviniis\ConnectionDatabase\SQL\{SQLSelect, SQLBuilder, SQLDelete, SQLInsert, SQLUpdate};
 use \Mviniis\ConnectionDatabase\SQL\Parts\{SQLFields, SQLFrom, SQLJoin, SQLOrder, SQLWhereGroup, SQLInto, SQLSet, SQLValues };
 
 /**
@@ -78,10 +78,17 @@ abstract class DBExecute {
 
   /**
    * Método responsável por realizar a remoção de registros no banco de dados
-   * @param  SQLWhereGroup       $conditions       Condições da remoção
+   * @param  SQLWhereGroup|SQLWhere       $conditions       Condições da remoção
    * @return self
    */
-  public function delete(SQLWhereGroup $conditions): self {
+  public function delete(mixed $conditions): self {
+    $obSql = new SQLDelete;
+
+    $obSql->addFrom(new SQLFrom($this->table))->addWhere($conditions);
+    
+    // ADICIONA O OBJETO DA QUERY MONTADA
+    $this->sql = $obSql;
+
     return $this;
   }
 
