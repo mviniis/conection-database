@@ -166,16 +166,18 @@ abstract class DBExecute {
       $pdo->commit();
 
       // VERIFICA O SUCESSO
-      $object   = $pdoStatement->fetchObject();
-      $success  = $object instanceof stdClass;
-      $obEntity = $this->getEntityError();
+      $object        = $pdoStatement->fetchObject();
+      $success       = $object instanceof stdClass;
+      $obEntity      = $this->getEntityError();
+      $obDTOResponse = new $this->modelData();
+      $obEntity->setData($obDTOResponse);
 
       // RETORNA EM CASO DE ERRO
       if(!$success) return $obEntity;
 
       // DEFINE OS DADOS VINDOS DO BANCO
       $obEntity->setSuccess($success);
-      $obEntity->setData(new $this->modelData((array) $object));
+      $obEntity->setData($obDTOResponse->definirDados((array) $object));
       return $obEntity;
     } catch (PDOException $pdoEx) {
       $pdo->commit();
