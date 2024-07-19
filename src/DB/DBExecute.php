@@ -283,4 +283,38 @@ abstract class DBExecute {
       return $counts;
     }
   }
+
+  /**
+   * Método responsável por retornar o último ID de um registro inserido
+   * @return int
+   */
+  public function getLastInsertId(): int {
+    $pdo    = DBConnection::getPdo();
+    $lastId = 0;
+    try {
+      // VERIFICA SE É UMA OPERAÇÃO DE INSERÇÃO
+      if(!$this->sql instanceof SQLInsert) {
+        throw new PDOException("A operação atual não é de inserção");
+      }
+
+      // PREPARA A OPERAÇÃO
+      $pdo->beginTransaction();
+      $pdoStatement = $pdo->prepare($this->sql->getQuery());
+
+      // EXECUTA A OPERAÇÃO
+      $pdoStatement->execute($this->sql->getPreparedParams());
+      $lastId = $pdo->lastInsertId();
+      if(!is_bool($lastId)) $lastId = (int) $lastId;
+
+      // VERIFICA O SUCESSO
+      if(!$lastId) throw new PDOException('Nenhum registro foi inserido', 400);
+
+      // SALVA OS DADOS NO BANCO
+      $pdo->commit();
+      return $lastId;
+    } catch (PDOException $pdoEx) {
+      $pdo->rollBack();
+      return $lastId;
+    }
+  }
 }
