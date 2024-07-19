@@ -14,23 +14,23 @@ class SQLSetItem extends SQLParts {
    * Construtor da clase
    * @param string      $field                  Campo que será atualizado
    * @param mixed       $value                  Valor com o qual campo será atualizado
-   * @param bool        $isFieldOtherTable      Define se o valor representa um campo de outra tabela
+   * @param bool        $isFieldOrFunction      Define se o valor representa um campo de uma tabela ou uma função
    */
   public function __construct(
     private string $field,
     private mixed $value,
-    private bool $isFieldOtherTable = false
+    private bool $isFieldOrFunction = false
   ) {
     $this->analisingPreparedParams();
   }
 
   public function getClausule(): string {
-    $value = $this->isFieldOtherTable ? $this->value: '?';
+    $value = $this->isFieldOrFunction ? $this->value: '?';
     return "{$this->field} = {$value}";
   }
   
   protected function analisingPreparedParams(): self {
-    if(!$this->isFieldOtherTable) $this->addPrepareParams($this->value);
+    if(!$this->isFieldOrFunction) $this->addPrepareParams($this->value);
     return $this;
   }
 }

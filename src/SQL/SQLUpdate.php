@@ -2,7 +2,7 @@
 
 namespace Mviniis\ConnectionDatabase\SQL;
 
-use \Mviniis\ConnectionDatabase\SQL\Parts\{SQLFrom, SQLJoin, SQLSet, SQLWhereGroup};
+use \Mviniis\ConnectionDatabase\SQL\Parts\{SQLFrom, SQLJoin, SQLSet};
 
 /**
  * class SQLUpdate
@@ -15,14 +15,27 @@ class SQLUpdate extends SQLBuilder {
   public function getQuery(): string {
     $odemValidacao = ['from', 'set', 'join', 'where', 'limit'];
     $partesQuery   = $this->formatQuery($odemValidacao);
-    $updateQuery   = [
-      'UPDATE',
-      $partesQuery['from'],
-      $partesQuery['join'],
-      !is_null($partesQuery['set']) ? "SET {$partesQuery['set']}": null,
-      !is_null($partesQuery['where'] && !empty($partesQuery['where'])) ? "WHERE {$partesQuery['where']}": null,
-      $partesQuery['limit']
-    ];
+
+    $updateQuery = ['UPDATE'];
+    if(isset($partesQuery['from']) && !is_null($partesQuery['from'])) {
+      $updateQuery[] = $partesQuery['from'];
+    }
+
+    if(isset($partesQuery['join']) && !is_null($partesQuery['join'])) {
+      $updateQuery[] = $partesQuery['join'];
+    }
+
+    if(isset($partesQuery['set']) && !is_null($partesQuery['set'])) {
+      $updateQuery[] = "SET {$partesQuery['set']}";
+    }
+
+    if(isset($partesQuery['where']) && !is_null($partesQuery['where'])) {
+      $updateQuery[] = "WHERE {$partesQuery['where']}";
+    }
+
+    if(isset($partesQuery['limit']) && !is_null($partesQuery['limit'])) {
+      $updateQuery[] = $partesQuery['limit'];
+    }
 
     return implode(' ', array_filter($updateQuery)) . ';';
   }
@@ -32,12 +45,9 @@ class SQLUpdate extends SQLBuilder {
     return $this;
   }
 
-  public function addSet(array $setItens = []): self {
-    foreach($setItens as $obSet) {
-      if(!$obSet instanceof SQLSet) continue;
-
-      if(!isset($this->queryParts['set'])) $this->queryParts['set'] = [];
-      $this->queryParts['set'][] = $obSet;
+  public function addSet(SQLSet $setItens): self {
+    if($setItens instanceof SQLSet) {
+      $this->queryParts['set'] = $setItens;
     }
 
     return $this;

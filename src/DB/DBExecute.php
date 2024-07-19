@@ -95,7 +95,7 @@ abstract class DBExecute {
   public function insert(
     array $fields = [],
     ? SQLValues  $values = null,
-    ? SQLWhereGroup $conditions = null,
+    mixed $conditions = null,
     bool $ignore = false
   ): self {
     $obSql = new SQLInsert;
@@ -113,16 +113,16 @@ abstract class DBExecute {
 
   /**
    * Método responsável por inserir um ou vários reguistros no banco de dados, com base em uma consulta
-   * @param  SQLWhereGroup|null       $conditions       Condições da consulta
-   * @param  SQLJoin|null             $joins            Junções com outras tabelas
-   * @param  SQLFields|null           $fields           Campos retornados
-   * @param  SQLOrder|null            $order            Ordenação dos dados retornados
-   * @param  int|null                 $limit            Limite de dados retornados
-   * @param  int|null                 $offset           Paginação dos dados
+   * @param  SQLWhereGroup|SQLWhere       $conditions       Condições da consulta
+   * @param  SQLJoin|null                 $joins            Junções com outras tabelas
+   * @param  SQLFields|null               $fields           Campos retornados
+   * @param  SQLOrder|null                $order            Ordenação dos dados retornados
+   * @param  int|null                     $limit            Limite de dados retornados
+   * @param  int|null                     $offset           Paginação dos dados
    * @return self
    */
   public function insertSelect(
-    ? SQLWhereGroup $conditions = null,
+    mixed $conditions = null,
     ? SQLJoin $joins = null,
     ? SQLFields $fields = null,
     ? SQLOrder $order = null,
@@ -134,15 +134,15 @@ abstract class DBExecute {
 
   /**
    * Método responsável por atualizar um ou vários registros no banco de dados
-   * @param SQLSet[]                $set        Campos que serão atualizados
-   * @param SQLWhereGroup|null      $where      Condições da atualização
+   * @param SQLSet                  $set        Campos que serão atualizados
+   * @param SQLWhereGroup|SQLWhere  $where      Condições da atualização
    * @param SQLJoin[]|null          $join       junções com outras tabelas
    * @param int|null                $limit      Limite de dados
    * @return self
    */
   public function update(
-    array $set,
-    ? SQLWhereGroup $conditions = null,
+    ? SQLSet $set = null,
+    mixed $conditions = null,
     ? array $joins = [],
     ? int $limit = null
   ): self {

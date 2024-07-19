@@ -2,7 +2,7 @@
 
 namespace Mviniis\ConnectionDatabase\SQL;
 
-use \Mviniis\ConnectionDatabase\SQL\Parts\{SQLParts, SQLFields, SQLFrom, SQLInto, SQLJoin, SQLOrder, SQLValues, SQLWhereGroup};
+use \Mviniis\ConnectionDatabase\SQL\Parts\{SQLParts, SQLSet, SQLFields, SQLFrom, SQLInto, SQLJoin, SQLOrder, SQLValues, SQLWhereGroup};
 
 /**
  * class SQLBuilder
@@ -73,8 +73,8 @@ abstract class SQLBuilder {
     foreach($ordem as $parte) {
       $valorParte       = $this->queryParts[$parte] ?? null;
       $response[$parte] = null;
-      $partsIsArray     = ['join', 'fields', 'fieldsValues', 'set'];
-      $partsIsObjetct   = ['into', 'from', 'order', 'values', 'where'];
+      $partsIsArray     = ['join', 'fields', 'fieldsValues'];
+      $partsIsObjetct   = ['into', 'set', 'from', 'order', 'values', 'where'];
       $partsIsDefault   = ['limit'];
       
       switch(true) {
@@ -202,10 +202,10 @@ abstract class SQLBuilder {
 
   /**
    * Método responsável por definir os campos que serão atualizados em uma operação
-   * @param  SQLSet[]       $setItens       Campos que serão atualizados
+   * @param  SQLSet       $setItens       Campos que serão atualizados
    * @return self
    */
-  public function addSet(array $setItens = []): self {
+  public function addSet(SQLSet $setItens): self {
     return $this;
   }
 
