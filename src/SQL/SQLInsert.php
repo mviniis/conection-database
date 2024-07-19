@@ -2,7 +2,7 @@
 
 namespace Mviniis\ConnectionDatabase\SQL;
 
-use \Mviniis\ConnectionDatabase\SQL\Parts\{SQLFields, SQLInto, SQLValues, SQLWhereGroup};
+use \Mviniis\ConnectionDatabase\SQL\Parts\{SQLFields, SQLInto, SQLValues};
 
 /**
  * class SQLInsert
@@ -15,14 +15,24 @@ class SQLInsert extends SQLBuilder {
   public function getQuery(): string {
     $odemValidacao = ['into', 'fieldsValues', 'values', 'where', 'select'];
     $partesQuery   = $this->formatQuery($odemValidacao);
-    $insertQuery   = [
-      'INSERT',
-      $partesQuery['into'],
-      !is_null($partesQuery['fieldsValues']) ? "({$partesQuery['fieldsValues']})": "",
-      !is_null($partesQuery['values']) ? "VALUES {$partesQuery['values']}": "",
-      !is_null($partesQuery['where']) ? "WHERE {$partesQuery['where']}": "",
-      $partesQuery['select']
-    ];
+
+    $insertQuery = ['INSERT', $partesQuery['into']];
+    if(isset($partesQuery['fieldsValues']) && !is_null($partesQuery['fieldsValues'])) {
+      $insertQuery[] = "({$partesQuery['fieldsValues']})";
+    }
+    
+    if(isset($partesQuery['values']) && !empty($partesQuery['values'])) {
+      $insertQuery[] = "VALUES {$partesQuery['values']}";
+    }
+    
+    if(isset($partesQuery['where']) && !is_null($partesQuery['where'])) {
+      $insertQuery[] = "WHERE {$partesQuery['where']}";
+    }
+
+    // ADICIONA UM SELECT NO INSERT
+    if(isset($partesQuery['select']) && !is_null($partesQuery['select'])) {
+      $insertQuery[] = $partesQuery['select'];
+    }
 
     $insertQuery             = implode(' ', array_filter($insertQuery));
     $adicionarVirgulaAoFinal = is_null($partesQuery['select']);

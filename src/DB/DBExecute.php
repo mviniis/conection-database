@@ -4,8 +4,8 @@ namespace Mviniis\ConnectionDatabase\DB;
 
 use \stdClass;
 use \PDOException;
-use \Mviniis\ConnectionDatabase\SQL\{SQLSelect, SQLBuilder, SQLUpdate};
-use \Mviniis\ConnectionDatabase\SQL\Parts\{SQLFields, SQLFrom, SQLJoin, SQLOrder, SQLWhereGroup, SQLInto, SQLSet, SQLValues};
+use \Mviniis\ConnectionDatabase\SQL\{SQLSelect, SQLBuilder, SQLInsert, SQLUpdate};
+use \Mviniis\ConnectionDatabase\SQL\Parts\{SQLFields, SQLFrom, SQLJoin, SQLOrder, SQLWhereGroup, SQLInto, SQLSet, SQLValues };
 
 /**
  * class DBExecute
@@ -87,16 +87,27 @@ abstract class DBExecute {
 
   /**
    * Método responsável por realizar a busca de um ou vários registros no banco de dados
-   * @param  SQLFields                $fields           Campos que serão populados
-   * @param  SQLJoin                  $values           Valores que serão inseridos
-   * @param  SQLWhereGroup|null       $conditions       Condições da inserção
+   * @param  SQLFields[]                  $fields           Campos que serão populados
+   * @param  SQLValues                    $values           Valores que serão inseridos
+   * @param  SQLWhereGroup|SQLWhere       $conditions       Condições da inserção
    * @return self
    */
   public function insert(
-    SQLFields $fields,
-    SQLValues $values,
-    ? SQLWhereGroup $conditions = null
+    array $fields = [],
+    ? SQLValues  $values = null,
+    ? SQLWhereGroup $conditions = null,
+    bool $ignore = false
   ): self {
+    $obSql = new SQLInsert;
+
+    $obSql->addInto(new SQLInto($this->table, $ignore))
+          ->addFields($fields)
+          ->addValues($values)
+          ->addWhere($conditions);
+
+    // ADICIONA O OBJETO DA QUERY MONTADA
+    $this->sql = $obSql;
+    
     return $this;
   }
 

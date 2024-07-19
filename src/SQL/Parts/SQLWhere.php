@@ -43,10 +43,6 @@ class SQLWhere extends SQLParts {
     $operacaoEspecifica = $this->validarOperador($indiceManipulado);
     if(strlen($operacaoEspecifica)) $condicao = $operacaoEspecifica;
 
-    // VERIFICA SE É UM OPERADOR ESPECIAL
-    $condicaoEspecial = $this->getCondicaoOperadorEspecial($indiceManipulado);
-    if(strlen($condicaoEspecial)) $condicao = $condicaoEspecial;
-
     $this->condicao = $condicao;
     return $this;
   }
@@ -81,24 +77,7 @@ class SQLWhere extends SQLParts {
         if(!$this->valorCampoBanco) $this->addPrepareParams($valor, $index);
         $formatado = "{$campo} {$operador} {$this->getPreparedParam($index, $campo)}";
       break;
-    }
 
-    return $formatado;
-  }
-
-  /**
-   * Método responsável por formatar as condições especiais
-   * @param  int       $index       Define o índice que está sendo manipulado na preparação dos parâmetros
-   * @return string
-   */
-  private function getCondicaoOperadorEspecial(int $index): string {
-    $formatado = '';
-    $campo        = $this->campo;
-    $valor        = $this->valor;
-    $operador     = $this->operador;
-    $adicionarNot = $this->adicionarNot;
-
-    switch($operador) {
       case 'BETWEEN':
         $valores = explode('|', $valor);
         $valores = array_filter(array_map('trim', $valores));

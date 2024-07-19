@@ -3,60 +3,63 @@
 namespace Mviniis\ConnectionDatabase\SQL\Parts;
 
 /**
- * class SQLValues
+ * class SQLValuesItem
  * 
- * Classe responsável por definir os valores de uma operação de atualização ou inclusão de dados
+ * Classe responsável por definir um item individual dos valores de uma operação de atualização ou inserção
  * 
  * @author Matheus Vinicius <matheusv.16santos@gmail.com>
  */
 class SQLValues extends SQLParts {
   /**
    * Construtor da classe
-   * @param SQLValuesGroup[]      $groups      Valores que serão adicionados
+   * @param array       $values       Valor do campo
    */
-  public function __construct(
-    private array $groups = []
-  ) {
+  public function __construct(private array $values = []) {
     $this->analisingPreparedParams();
   }
 
   public function getClausule(): string {
-    $values     = [];
-    $quantidade = -1;
-    foreach($this->groups as $obValueGroup) {
+    $values = [];
+    foreach($this->values as $obValueGroup) {
       if(!$obValueGroup instanceof SQLValuesGroup) continue;
 
-      // VALIDA SE O TOTAL DE ITENS É IGUAL AO PRIMEIRO VALOR DE INSERÇÃO
-      if($quantidade < 0) $quantidade = count($obValueGroup->getPreparedParams());
-      if(!$this->validateTotalFields($quantidade, $obValueGroup)) continue;
-
-      $values[] = "({$obValueGroup->getClausule()})";
+      // ADICIONA OS VALORES QUE SERÃO INSERIDOS
+      $this->addPrepareParams($obValueGroup->getPreparedParams());
+      $value = $obValueGroup->getClausule();
+      if(strlen($value)) $values[] = $value;
     }
-
+    
     return implode(', ', $values);
   }
 
   protected function analisingPreparedParams(): self {
-    $quantidade = -1;
-    foreach($this->groups as $obValueGroup) {
-      // VALIDA SE O TOTAL DE ITENS É IGUAL AO PRIMEIRO VALOR DE INSERÇÃO
-      if($quantidade < 0) $quantidade = count($obValueGroup->getPreparedParams());
-      if(!$this->validateTotalFields($quantidade, $obValueGroup)) continue;
+    $quantityBase = null;
+    foreach($this->values as $key => $obValueGroup) {
+      if(!$obValueGroup instanceof SQLValuesGroup) continue;
 
-      // ADICIONA OS PARÂMETROS PREPRADOS DO VALOR QUE ESTÁ VÁLIDO
-      foreach($obValueGroup->getPreparedParams() as $preparedParam) $this->addPrepareParams($preparedParam);
+      // VERIFICA SE TODOS OS AGRUPAMENTOS POSSUEM A MESMA QUANTIDADE DE VALORES
+      $quantityBaseValid = !is_null($quantityBase);
+      if(!$quantityBaseValid) $quantityBase = $obValueGroup->getTotalItens();
+      if($quantityBase !== $obValueGroup->getTotalItens()) {
+        unset($this->values[$key]);
+        continue;
+      }
+
+      // ADICIONA OS VALORES PREPARADOS
+      $this->addPrepareParams($obValueGroup->getPreparedParams());
     }
 
+    // REORDENAÇÃO DOS CAMPOS
+    sort($this->values);
+    
     return $this;
   }
 
   /**
-   * Método responsável por validar se os itens do agrupamento possuem a mesma quantidade de campos
-   * @param  int                 $quantidade        Quantidade de itens que o agrupamento deve possuir
-   * @param  SQLValuesGroup      $obValueGroup      Objeto de agrupamento dos valores
-   * @return bool
+   * Método responsável por retornar a quantidade de valores que serão adicionadas
+   * @return int
    */
-  private function validateTotalFields(int $quantidade, SQLValuesGroup $obValueGroup): bool {
-    return ($obValueGroup->totalItens() === $quantidade);
+  public function getTotalValues(): int {
+    return count($this->getPreparedParams());
   }
 }

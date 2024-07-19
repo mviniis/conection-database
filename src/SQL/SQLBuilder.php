@@ -36,6 +36,23 @@ abstract class SQLBuilder {
   }
 
   /**
+   * Método responsável por extrair os dados dos parâmetros preparados
+   * @param  array      $params      Parâmetros preparados
+   * @param  array      $result      Resultado da extração
+   * @return void
+   */
+  private function extractPreparedValues(array $params, array &$result): void {
+    foreach($params as $value) {
+      if(is_array($value)) {
+        $this->extractPreparedValues($value, $result);
+        continue;
+      }
+
+      $result[] = $value;
+    }
+  }
+
+  /**
    * Método responsável por definir os parâmetros preparados em ordem sequencial
    * @param  array      $preparedParams      Parâmetros que serão adicionados
    * @return self
@@ -114,7 +131,10 @@ abstract class SQLBuilder {
    * @return array
    */
   public function getPreparedParams(): array {
-    return $this->preparedParams;
+    $preparedParams = [];
+    $this->extractPreparedValues($this->preparedParams, $preparedParams);
+
+    return $preparedParams;
   }
 
   /**
@@ -173,7 +193,7 @@ abstract class SQLBuilder {
 
   /**
    * Método responsável por definir os campos de uma operação de atualização ou inserção de dados
-   * @param SQLValues       $obValues       Campos 
+   * @param SQLValues       $obValues       Array com os valores que serão inseridos
    * @return self
    */
   public function addValues(SQLValues $obValues): self {
