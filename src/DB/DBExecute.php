@@ -134,7 +134,7 @@ abstract class DBExecute {
     $obSql = new SQLInsert;
     $obSql->addInto(new SQLInto($this->table, $this->table, $ignore));
     $obSql->addSelect($obSqlSelect)->addFields($fields);
-    
+
     // SUBTITUI A QUERY
     $this->sql = $obSql;
 
@@ -145,8 +145,8 @@ abstract class DBExecute {
    * Método responsável por atualizar um ou vários registros no banco de dados
    * @param SQLSet                  $set        Campos que serão atualizados
    * @param SQLWhereGroup|SQLWhere  $where      Condições da atualização
-   * @param SQLJoin[]|null          $join       junções com outras tabelas
-   * @param int|null                $limit      Limite de dados
+   * @param SQLJoin[]               $join       Junções com outras tabelas
+   * @param int                     $limit      Limite de dados
    * @return self
    */
   public function update(
