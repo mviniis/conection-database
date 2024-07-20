@@ -24,12 +24,22 @@ abstract class DTO implements DtoInterface {
   }
 
   public function definirDados(mixed $dados, string $de = 'tabela'): DTO {
+    if(empty($dados)) return $this;
+    
     $metodo = ($de == 'tabela') ? 'getParametrosTabela': 'getParametrosClasse';
     foreach($this->{$metodo}() as $ordem => $nomeCampo) {
       $campoCorrespondente = $this->getParametrosClasse()[$ordem] ?? null;
       if(is_null($campoCorrespondente)) continue;
       
       $this->{$campoCorrespondente} = $this->setValorEspecifico($nomeCampo, $dados);
+
+      // EVITA DUPLICAÇÃO DOS DADOS
+      unset($dados[$campoCorrespondente]);
+    }
+    
+    // ADICIONA OS VALORES EXCEDENTES
+    if(!empty($dados)) {
+      foreach($dados as $chave => $valorExcedente) $this->$chave = $valorExcedente;
     }
 
     return $this;
@@ -53,6 +63,6 @@ abstract class DTO implements DtoInterface {
    * @return self
    */
   public function __set(string $propety, mixed $value): void {
-    if(property_exists($this, $propety)) $this->{$propety} = $value;
+    $this->{$propety} = $value;
   }
 } 
