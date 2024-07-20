@@ -56,7 +56,6 @@ composer require mviniis/connection-database
     ```
 
   * Após configurado, pode-se utilizar dos seguintes métodos de manipulação de banco (`select`, `update`, `insert`, `insertSelect`, `delete`);
-  * ***DETALHES DAS IMPLEMENTAÇÕES DE CADA MÉTODO:*** 
     ```php
       use Mviniis\ConnectionDatabase\SQL\Parts\SQLWhere;
       use Mviniis\ConnectionDatabase\SQL\Parts\SQLWhereGroup;
