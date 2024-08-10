@@ -12,7 +12,7 @@ namespace Mviniis\ConnectionDatabase\SQL\Parts;
 class SQLValues extends SQLParts {
   /**
    * Construtor da classe
-   * @param array       $values       Valor do campo
+   * @param SQLValuesGroup[]       $values       Valor do campo
    */
   public function __construct(private array $values = []) {
     $this->analisingPreparedParams();
