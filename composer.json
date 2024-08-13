@@ -1,6 +1,7 @@
 {
 	"name": "mviniis/connection-database",
 	"description": "Gerenciador de conexões com banco de dados e gerador de queries",
+	"version": "v1.0.1.0",
 	"license": "MIT",
 	"authors": [
 		{
